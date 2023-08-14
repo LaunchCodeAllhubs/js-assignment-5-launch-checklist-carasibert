@@ -8,19 +8,38 @@ const {
     pickPlanet,
 } = require('./scriptHelper')
 
-document.addEventListener("load", function() {
-    const list = document.getElementById("faultyItems");
-    const launchStatus = document.getElementById("launchStatus");
-    const missionTarget = document.getElementById("missionTarget");
+
+const launchStatus = document.getElementById("launchStatus");
+const missionTarget = document.getElementById("missionTarget");
+window.addEventListener("load", function() {
+    let form = document.querySelector("form");
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        let pilotName = document.querySelector("input[name=pilotName]");
+        let copilotName = document.querySelector("input[name=copilotName]");
+        let fuelLevel = document.querySelector("input[name=fuelLevel]");
+        let cargoMass = document.querySelector("input[name=cargoMass]");
+        const list = document.getElementById("faultyItems");
+  
+        formSubmission(
+            document,
+            list,
+            pilotName.value,
+            copilotName.value,
+            fuelLevel.value,
+            cargoMass.value
+        );
+    });
+
    let listedPlanets;
    // Set listedPlanetsResponse equal to the value returned by calling myFetch()
    let listedPlanetsResponse = myFetch();
    
    listedPlanetsResponse.then(function (result) {
+           // Below this comment call the appropriate helper functions to pick a planet fom the list of planets and add that information to your destination.
        listedPlanets = result;
+       let randomPlanet = pickPlanet(listedPlanets);
        console.log(listedPlanets);
-
-       const randomPlanet = pickPlanet(listedPlanets);
 
        addDestinationInfo(
         document, 
@@ -32,26 +51,4 @@ document.addEventListener("load", function() {
         randomPlanet.image
        );
     });
-
-    const form = document.querySelector("form");
-    form.addEventListener("submit", function(event) {
-        let pilotName = document.querySelector("input[name=pilotName");
-        let copilotName = document.querySelector("input[name=copilotName]");
-        let fuelLevel = document.querySelector("input[name=fuelLevel]");
-        let cargoMass = document.querySelector("input[name=cargoMass]");
-  
-        let formValidation = formSubmission(
-            document,
-            list,
-            pilotName.value,
-            copilotName.value,
-            fuelLevel.value,
-            cargoMass.value
-        );
-
-        if (formValidation) {
-            missionTarget.style.visibility = "visible";
-        }
-    });
-       // Below this comment call the appropriate helper functions to pick a planet fom the list of planets and add that information to your destination.
 });
